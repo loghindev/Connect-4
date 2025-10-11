@@ -1,4 +1,12 @@
+const favicon = document.querySelector("link[rel='icon']");
+
 const gameboard = document.querySelector(".gameboard");
+const player1Symbol = document.querySelector(".scoreboard .player-1 img");
+const player2Symbol = document.querySelector(".scoreboard .player-2 img");
+const player1Spinner = document.querySelector(".scoreboard .player-1 .spinner");
+const player2Spinner = document.querySelector(".scoreboard .player-2 .spinner");
+const player1Score = document.querySelector(".scoreboard .values .p1-value");
+const player2Score = document.querySelector(".scoreboard .values .p2-value");
 const ROWS = 6;
 const COLS = 7;
 const players = ["red", "yellow"];
@@ -9,7 +17,36 @@ let highest = [5, 5, 5, 5, 5, 5, 5];
 let matrix = [];
 let gameOver = false;
 
-document.addEventListener("DOMContentLoaded", setGameboard);
+document.addEventListener("DOMContentLoaded", () => {
+  setScoreboard();
+  setGameboard();
+  console.log("Player 1", player1);
+  console.log("Player 2", player2);
+  console.log("Current", current);
+});
+
+function updateSpinner() {
+  // update the spinner for the current player
+  [player1Spinner, player2Spinner].forEach((spinner) => {
+    spinner.style.visibility = "hidden";
+    spinner.style.opacity = "0";
+  });
+  if (current === player1) {
+    player1Spinner.style.visibility = "visible";
+    player1Spinner.style.opacity = "1";
+  } else {
+    player2Spinner.style.visibility = "visible";
+    player2Spinner.style.opacity = "1";
+  }
+}
+
+function setScoreboard() {
+  let redPiecePath = "assets/buttons/BTN_RED_CIRCLE_IN.webp";
+  let yellowPiecePath = "assets/buttons/BTN_ORANGE_CIRCLE_IN.webp";
+  player1Symbol.src = player1 === "red" ? redPiecePath : yellowPiecePath;
+  player2Symbol.src = player2 === "red" ? redPiecePath : yellowPiecePath;
+  updateSpinner();
+}
 
 function setGameboard() {
   for (let r = 0; r < ROWS; ++r) {
@@ -34,11 +71,26 @@ function setPiece(event) {
   let c = coords[1];
   if (r >= 0) {
     const cell = document.getElementById(`${r}-${c}`);
-    cell.style.backgroundColor = current;
+    cell.classList.add("fade-piece");
     matrix[r][c] = current;
+    paint(cell);
     checkWinner();
-    updateCurrent();
+    // after checkWinner() - gameOver will possibly change it's value
+    if (!gameOver) {
+      updateCurrent();
+      updateSpinner();
+    }
     --highest[coords[1]];
+  }
+}
+
+function paint(cell) {
+  if (current === "red") {
+    cell.style.backgroundImage =
+      "url(./assets/buttons/BTN_RED_CIRCLE_OUT.webp)";
+  } else {
+    cell.style.backgroundImage =
+      "url(./assets/buttons/BTN_ORANGE_CIRCLE_OUT.webp)";
   }
 }
 
@@ -56,7 +108,7 @@ function checkWinner() {
         matrix[r][c + 2] === matrix[r][c + 3] &&
         matrix[r][c] !== ""
       ) {
-        return foundWinner();
+        return endGame([r, c], [r, c + 1], [r, c + 2], [r, c + 3]);
       }
     }
   }
@@ -70,7 +122,7 @@ function checkWinner() {
         matrix[r + 2][c] === matrix[r + 3][c] &&
         matrix[r][c] !== ""
       ) {
-        return foundWinner();
+        return endGame([r, c], [r + 1, c], [r + 2, c], [r + 3, c]);
       }
     }
   }
@@ -84,7 +136,7 @@ function checkWinner() {
         matrix[r + 2][c + 2] === matrix[r + 3][c + 3] &&
         matrix[r][c] !== ""
       ) {
-        return foundWinner();
+        return endGame([r, c], [r + 1, c + 1], [r + 2, c + 2], [r + 3, c + 3]);
       }
     }
   }
@@ -98,16 +150,47 @@ function checkWinner() {
         matrix[r + 2][c - 2] === matrix[r + 3][c - 3] &&
         matrix[r][c] !== ""
       ) {
-        return foundWinner();
+        return endGame([r, c], [r + 1, c - 1], [r + 2, c - 2], [r + 3, c - 3]);
       }
     }
   }
 }
 
-function foundWinner() {
+function endGame(...coords) {
   gameOver = true;
-  alert(`${current} wins!`);
-  setTimeout(restartGame, 2000);
+  animateWinner(coords);
+  updateScores();
+  setTimeout(restartGame, 2500);
+}
+
+function animateWinner(coords) {
+  let pieces = [];
+  coords.forEach((coord) =>
+    pieces.push(document.getElementById(`${coord[0]}-${coord[1]}`))
+  );
+  pieces.forEach((piece, index) =>
+    setTimeout(() => {
+      piece.classList.add("blink");
+    }, 80 * index)
+  );
+}
+
+function updateScores() {
+  current === player1
+    ? (increment(player1Score), animateScore(player1Score))
+    : (increment(player2Score), animateScore(player2Score));
+}
+
+function increment(score) {
+  let value = Number(score.textContent);
+  score.textContent = (++value).toString();
+}
+
+function animateScore(score) {
+  score.classList.add("anim-score");
+  score.addEventListener("animationend", () => {
+    score.classList.remove("anim-score");
+  });
 }
 
 function restartGame() {

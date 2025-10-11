@@ -4,10 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connect Four</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="./assets/buttons/BTN_ORANGE_CIRCLE_IN.webp"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="gameboard"></div>
+    <div id="game">
+      <div class="control-panel">
+        <img class="audio" src="./assets/symbols/SYMB_VOLUME.webp" />
+      </div>
+      <div class="scoreboard">
+        <div class="player-1">
+          <img class="symbol" />
+          <div class="name">Player 1</div>
+          <div class="spinner"></div>
+        </div>
+        <div class="values">
+          <span class="p1-value">0</span>
+          <span>:</span>
+          <span class="p2-value">0</span>
+        </div>
+        <div class="player-2">
+          <div class="spinner"></div>
+          <div class="name">Player 2</div>
+          <img class="symbol" />
+        </div>
+      </div>
+      <div class="gameboard"></div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Cheese";
+  src: url("./assets/fonts/Cheese-Regular.woff2") format("woff2"),
+    url("./assets/fonts/Cheese-Regular.woff2") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 * {
   margin: 0;
   padding: 0;
@@ -5,31 +13,127 @@
 
 body {
   height: 100vh;
+  font-family: "Cheese", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url("./assets/background.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#game {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  row-gap: 8px;
+}
+
+#game .control-panel img {
+  width: 42px;
 }
 
 .gameboard {
   width: 490px;
   height: 420px;
   padding: 8px;
-  border: 8px solid #444;
+  border: 12px solid #5129144f;
   border-radius: 20px;
   display: flex;
   flex-wrap: wrap;
+  background-image: url("./assets/wood.webp");
+  background-position: right;
+  box-shadow: 0 0 30px rgb(89, 53, 19);
 }
 
 .gameboard .cell {
   width: 60px; /* calc(70 - margin) */
   height: 60px;
-  border: 2px solid #44444450;
+  border: 2px solid #6a3b1e50;
   box-sizing: border-box;
   border-radius: 50%;
   margin: 5px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .gameboard .cell:hover {
   background-color: #44444410;
   cursor: pointer;
+}
+
+/* ---- scoreboard ----- */
+.scoreboard {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scoreboard > div {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  font-size: 1.2em;
+}
+
+.scoreboard img {
+  width: 32px;
+}
+
+.spinner {
+  width: 6px;
+  height: 6px;
+  border: 8px dotted rgb(94, 64, 31);
+  border-radius: 50%;
+  visibility: hidden;
+  opacity: 0;
+  animation: rotate 8s linear infinite;
+  transition: opacity 0.15s ease;
+}
+
+/* ----- utility classes ----- */
+.fade-piece {
+  animation: fade-in 0.1s ease;
+}
+
+.blink {
+  animation: blink 0.4s 5 ease;
+}
+
+.anim-score {
+  animation: anim-score 0.8s 5 ease;
+}
+
+@keyframes fade-in {
+  from {
+    transform: scale(0.8);
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes blink {
+  40% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes anim-score {
+  40% {
+    transform: scale(1.25) rotateZ(210deg);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
