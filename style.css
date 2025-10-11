@@ -9,6 +9,8 @@
 * {
   margin: 0;
   padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 body {
@@ -31,8 +33,9 @@ body {
   row-gap: 8px;
 }
 
-#game .control-panel img {
+#game .control-panel img.audio {
   width: 42px;
+  height: 40px;
 }
 
 .gameboard {
@@ -105,7 +108,7 @@ body {
 }
 
 .anim-score {
-  animation: anim-score 0.8s 5 ease;
+  animation: anim-score 0.8s 4 ease;
 }
 
 @keyframes fade-in {

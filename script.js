@@ -7,6 +7,9 @@ const player1Spinner = document.querySelector(".scoreboard .player-1 .spinner");
 const player2Spinner = document.querySelector(".scoreboard .player-2 .spinner");
 const player1Score = document.querySelector(".scoreboard .values .p1-value");
 const player2Score = document.querySelector(".scoreboard .values .p2-value");
+const audioIcon = document.querySelector(".control-panel img.audio");
+const winnerSoundEffect = new Audio("assets/audio/win.mp3");
+const clickSoundEffect = new Audio("assets/audio/click.mp3");
 const ROWS = 6;
 const COLS = 7;
 const players = ["red", "yellow"];
@@ -16,13 +19,12 @@ let current = [player1, player2][Math.floor(Math.random() * 2)];
 let highest = [5, 5, 5, 5, 5, 5, 5];
 let matrix = [];
 let gameOver = false;
+let sound = true;
 
 document.addEventListener("DOMContentLoaded", () => {
   setScoreboard();
   setGameboard();
-  console.log("Player 1", player1);
-  console.log("Player 2", player2);
-  console.log("Current", current);
+  setSound();
 });
 
 function updateSpinner() {
@@ -74,6 +76,7 @@ function setPiece(event) {
     cell.classList.add("fade-piece");
     matrix[r][c] = current;
     paint(cell);
+    runEffect(clickSoundEffect);
     checkWinner();
     // after checkWinner() - gameOver will possibly change it's value
     if (!gameOver) {
@@ -158,6 +161,7 @@ function checkWinner() {
 
 function endGame(...coords) {
   gameOver = true;
+  runEffect(winnerSoundEffect);
   animateWinner(coords);
   updateScores();
   setTimeout(restartGame, 2500);
@@ -200,4 +204,36 @@ function restartGame() {
   highest = [5, 5, 5, 5, 5, 5, 5];
   matrix = [];
   setGameboard();
+}
+
+// localStorage.clear();
+
+function setSound() {
+  let unmutedIconPath = "assets/symbols/SYMB_VOLUME.webp";
+  let mutedIconPath = "assets/symbols/SYMB_MUTE.webp";
+  if (localStorage.length) {
+    sound = localStorage.getItem("sound") === "true";
+  }
+  if (sound === true) {
+    audioIcon.src = unmutedIconPath;
+  } else if (sound === false) {
+    audioIcon.src = mutedIconPath;
+  }
+  // click on icon
+  audioIcon.addEventListener("click", () => {
+    sound = !sound;
+    localStorage.setItem("sound", sound);
+    if (sound === true) {
+      audioIcon.src = unmutedIconPath;
+    } else if (sound === false) {
+      audioIcon.src = mutedIconPath;
+    }
+  });
+}
+
+function runEffect(effect) {
+  if (!sound) return;
+  effect.volume = 0.5;
+  effect.currentTime = 0;
+  effect.play();
 }
