@@ -140,3 +140,29 @@ body {
     transform: rotateZ(360deg);
   }
 }
+
+/* ------ mobile ----- */
+@media screen and (max-width: 560px) {
+  .gameboard {
+    width: 350px;
+    height: 300px;
+  }
+
+  .gameboard .cell {
+    width: 44px;
+    height: 44px;
+    margin: 3px;
+  }
+
+  .scoreboard {
+    font-size: 0.9em;
+  }
+  #game .control-panel img.audio {
+    width: 32px;
+    height: 30px;
+  }
+
+  .scoreboard img {
+    width: 26px;
+  }
+}
